@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios PHP Herramientas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        button, input[type="number"], input[type="text"], label {
+            display: block;
+            margin: 10px 0;
+            padding: 8px;
+            font-size: 1rem;
+            width: 100%;
+        }
+        input[type="radio"] {
+            margin-right: 8px;
+        }
+        /* Estilo para el botón de volver */
+        .boton-volver {
+            display: block;
+            width: auto;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px auto;
+            text-decoration: none;
+        }
+        .boton-volver:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón al inicio para volver a la página principal -->
+    <a href="index.html" class="boton-volver">Volver a la Página Principal</a>
+
+    <h1>Ejercicios PHP Herramientas</h1>
+    <div class="container">
+        <!-- Juego de Lotería -->
+        <div class="card">
+            <h2>Juego de Lotería</h2>
+            <p>Presiona el botón para generar tus números de la suerte:</p>
+            <button id="generarNumeros">Generar Números</button>
+            <div id="resultadosLoteria">
+                <p id="balotas"></p>
+                <p id="superBalota"></p>
+            </div>
+        </div>
+
+        <!-- Serie Fibonacci -->
+        <div class="card">
+            <h2>Generador de Serie Fibonacci</h2>
+            <label for="cantidad">¿Cuántos números de Fibonacci deseas generar?</label>
+            <input type="number" id="cantidad" min="1" placeholder="Ingresa un número">
+            <button id="generarFibonacci">Generar Fibonacci</button>
+            <p id="resultadoFibonacci"></p>
+        </div>
+
+        <!-- Número Primo -->
+        <div class="card">
+            <h2>¿Es Primo?</h2>
+            <label for="numeroPrimo">Ingresa un número:</label>
+            <input type="number" id="numeroPrimo" placeholder="Número a evaluar">
+            <button id="evaluarPrimo">Verificar</button>
+            <p id="resultadoPrimo"></p>
+        </div>
+
+        <!-- Operaciones Matemáticas -->
+        <div class="card">
+            <h2>Operaciones Matemáticas</h2>
+            <label for="numero1">Número 1:</label>
+            <input type="number" id="numero1">
+            <label for="numero2">Número 2:</label>
+            <input type="number" id="numero2">
+            <label>
+                <input type="radio" name="operacion" value="suma" checked> Suma
+            </label>
+            <label>
+                <input type="radio" name="operacion" value="resta"> Resta
+            </label>
+            <label>
+                <input type="radio" name="operacion" value="multiplicacion"> Multiplicación
+            </label>
+            <label>
+                <input type="radio" name="operacion" value="division"> División
+            </label>
+            <button id="calcularResultado">Calcular</button>
+            <p id="resultadoOperacion"></p>
+        </div>
+    </div>
+
+    <!-- Botón al final para volver a la página principal -->
+    <a href="index.html" class="boton-volver">Volver a la Página Principal</a>
+
+    <script>
+        // Juego de Lotería
+        document.getElementById("generarNumeros").addEventListener("click", () => {
+            fetch("php/loteria.php")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("balotas").textContent = `Balotas: ${data.balotas.join(", ")}`;
+                    document.getElementById("superBalota").textContent = `Súper Balota: ${data.superBalota}`;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        // Serie Fibonacci
+        document.getElementById("generarFibonacci").addEventListener("click", () => {
+            const cantidad = document.getElementById("cantidad").value;
+            fetch("php/fibonacci.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `cantidad=${cantidad}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("resultadoFibonacci").textContent = `Serie: ${data.serie.join(", ")}`;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        // Verificar si un número es primo
+        document.getElementById("evaluarPrimo").addEventListener("click", () => {
+            const numero = document.getElementById("numeroPrimo").value;
+            fetch("php/primos.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `numero=${numero}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("resultadoPrimo").textContent = data.mensaje;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+
+        // Operaciones Matemáticas
+        document.getElementById("calcularResultado").addEventListener("click", () => {
+            const numero1 = document.getElementById("numero1").value;
+            const numero2 = document.getElementById("numero2").value;
+            const operacion = document.querySelector('input[name="operacion"]:checked').value;
+            fetch("php/operaciones.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `numero1=${numero1}&numero2=${numero2}&operacion=${operacion}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("resultadoOperacion").textContent = `Resultado: ${data.resultado}`;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>
