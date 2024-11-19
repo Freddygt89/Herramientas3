@@ -134,7 +134,7 @@
         // Serie Fibonacci
         document.getElementById("generarFibonacci").addEventListener("click", () => {
             const cantidad = document.getElementById("cantidad").value;
-            fetch("php/fibonacci.php", {
+            fetch("./php/fibonacci.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `cantidad=${cantidad}`
@@ -149,7 +149,7 @@
         // Verificar si un número es primo
         document.getElementById("evaluarPrimo").addEventListener("click", () => {
             const numero = document.getElementById("numeroPrimo").value;
-            fetch("php/primos.php", {
+            fetch("./php/primos.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `numero=${numero}`
@@ -166,7 +166,7 @@
             const numero1 = document.getElementById("numero1").value;
             const numero2 = document.getElementById("numero2").value;
             const operacion = document.querySelector('input[name="operacion"]:checked').value;
-            fetch("php/operaciones.php", {
+            fetch("./php/operaciones.php", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `numero1=${numero1}&numero2=${numero2}&operacion=${operacion}`
